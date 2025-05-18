@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.22">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Azizbek Ganiev (475150)">
+<meta name="author" content="Shokhrukhbek Valijonov (475154)">
+<meta name="author" content="Sujith Madesh (474083)">
+<meta name="dcterms.date" content="2025-05-11">
+
+<title>Portfolio VaR &amp; ES Analysis: Python vs R Comparison</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="Var_ES_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Var_ES_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Var_ES_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Var_ES_files/libs/quarto-html/popper.min.js"></script>
+<script src="Var_ES_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Var_ES_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Var_ES_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Var_ES_files/libs/quarto-html/quarto-syntax-highlighting-7b4406b7675125bc2ba204020e191172.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Var_ES_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Var_ES_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Var_ES_files/libs/bootstrap/bootstrap-dd45cb7095cfb374f2383f204872c7f4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#portfolio-var-es-analysis-project-overview" id="toc-portfolio-var-es-analysis-project-overview" class="nav-link active" data-scroll-target="#portfolio-var-es-analysis-project-overview"><span style="color:#0077b6;">Portfolio VaR &amp; ES Analysis: Project Overview</span></a>
+  <ul class="collapse">
+  <li><a href="#python-implementation" id="toc-python-implementation" class="nav-link" data-scroll-target="#python-implementation"><span style="color:#0077b6;">Python Implementation</span></a>
+  <ul class="collapse">
+  <li><a href="#import-necessary-libraries" id="toc-import-necessary-libraries" class="nav-link" data-scroll-target="#import-necessary-libraries">1. <span style="color:#0077b6;">Import Necessary Libraries</span></a></li>
+  <li><a href="#data-acquisition-and-preparation" id="toc-data-acquisition-and-preparation" class="nav-link" data-scroll-target="#data-acquisition-and-preparation">2. <span style="color:#0077b6;">Data Acquisition and Preparation</span></a></li>
+  <li><a href="#portfolio-construction" id="toc-portfolio-construction" class="nav-link" data-scroll-target="#portfolio-construction">3. <span style="color:#0077b6;">Portfolio Construction</span></a></li>
+  <li><a href="#value-at-risk-var-and-expected-shortfall-es-calculations" id="toc-value-at-risk-var-and-expected-shortfall-es-calculations" class="nav-link" data-scroll-target="#value-at-risk-var-and-expected-shortfall-es-calculations">4. <span style="color:#0077b6;">Value at Risk (VaR) and Expected Shortfall (ES) Calculations</span></a></li>
+  <li><a href="#results-summary-visualization" id="toc-results-summary-visualization" class="nav-link" data-scroll-target="#results-summary-visualization">5. <span style="color:#0077b6;">Results Summary &amp; Visualization</span></a></li>
+  </ul></li>
+  <li><a href="#key-insights-and-findings" id="toc-key-insights-and-findings" class="nav-link" data-scroll-target="#key-insights-and-findings"><span style="color:#0077b6;">Key Insights and Findings</span></a></li>
+  <li><a href="#final-conclusion-improvements-over-the-r-project" id="toc-final-conclusion-improvements-over-the-r-project" class="nav-link" data-scroll-target="#final-conclusion-improvements-over-the-r-project"><span style="color:#0077b6;">Final Conclusion &amp; Improvements Over the R Project</span></a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Var_ES.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Portfolio VaR &amp; ES Analysis: Python vs R Comparison</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Azizbek Ganiev (475150) </p>
+             <p>Shokhrukhbek Valijonov (475154) </p>
+             <p>Sujith Madesh (474083) </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 11, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="portfolio-var-es-analysis-project-overview" class="level1">
+<h1><span style="color:#0077b6;">Portfolio VaR &amp; ES Analysis: Project Overview</span></h1>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<strong>Objective</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Estimate and compare the Value at Risk (VaR) and Expected Shortfall (ES) of a diversified portfolio using: - <span style="color:#0077b6;">Historical Simulation</span> - <span style="color:#43aa8b;">Parametric (Variance-Covariance)</span> - <span style="color:#720026;">Monte Carlo Simulation</span></p>
+<p><strong>Data Source:</strong> Yahoo Finance (AAPL, MSFT, GOOG)</p>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Methods Overview</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<ol type="1">
+<li><span style="color:#0077b6;">Historical Simulation:</span> Non-parametric, uses actual returns.</li>
+<li><span style="color:#43aa8b;">Parametric (Variance-Covariance):</span> Assumes normality, uses mean &amp; std deviation.</li>
+<li><span style="color:#720026;">Monte Carlo:</span> Simulates returns using estimated parameters.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr>
+<section id="python-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="python-implementation"><span style="color:#0077b6;">Python Implementation</span></h2>
+<section id="import-necessary-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="import-necessary-libraries">1. <span style="color:#0077b6;">Import Necessary Libraries</span></h3>
+<div id="80493833" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="data-acquisition-and-preparation" class="level3">
+<h3 class="anchored" data-anchor-id="data-acquisition-and-preparation">2. <span style="color:#0077b6;">Data Acquisition and Preparation</span></h3>
+<div id="3ecad13e" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tickers <span class="op">=</span> [<span class="st">'AAPL'</span>, <span class="st">'GOOG'</span>, <span class="st">'MSFT'</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> <span class="st">'2020-01-01'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data (MultiIndex by default)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> yf.download(tickers, start<span class="op">=</span>start_date)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>close_prices <span class="op">=</span> data[<span class="st">'Close'</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set end_date to the latest available date in the data</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>data_dates <span class="op">=</span> close_prices.index</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> <span class="bu">str</span>(data_dates[<span class="op">-</span><span class="dv">1</span>].date())</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>close_prices.dropna(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>returns <span class="op">=</span> close_prices.pct_change().fillna(<span class="dv">0</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>returns.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>YF.download() has changed argument auto_adjust default to True</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[                       0%                       ][**********************67%*******                ]  2 of 3 completed[*********************100%***********************]  3 of 3 completed
+C:\Users\HP\AppData\Local\Temp\ipykernel_8428\2895436449.py:9: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  close_prices.dropna(inplace=True)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Ticker</th>
+<th data-quarto-table-cell-role="th">AAPL</th>
+<th data-quarto-table-cell-role="th">GOOG</th>
+<th data-quarto-table-cell-role="th">MSFT</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2025-05-12</td>
+<td>0.063146</td>
+<td>0.033683</td>
+<td>0.024001</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2025-05-13</td>
+<td>0.010152</td>
+<td>0.008209</td>
+<td>-0.000267</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2025-05-14</td>
+<td>-0.002818</td>
+<td>0.036795</td>
+<td>0.008461</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2025-05-15</td>
+<td>-0.004145</td>
+<td>-0.008453</td>
+<td>0.002256</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2025-05-16</td>
+<td>-0.000899</td>
+<td>0.012273</td>
+<td>0.002516</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="portfolio-construction" class="level3">
+<h3 class="anchored" data-anchor-id="portfolio-construction">3. <span style="color:#0077b6;">Portfolio Construction</span></h3>
+<div id="92e56d18" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> np.array([<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>portfolio_returns <span class="op">=</span> returns.dot(weights)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>cumulative_returns <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> portfolio_returns).cumprod() <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.plot(cumulative_returns, label<span class="op">=</span><span class="st">'Cumulative Portfolio Returns'</span>, color<span class="op">=</span><span class="st">'#0077b6'</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Cumulative Portfolio Returns Over Time'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, color<span class="op">=</span><span class="st">'#0077b6'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Date'</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Cumulative Returns'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Var_ES_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="value-at-risk-var-and-expected-shortfall-es-calculations" class="level3">
+<h3 class="anchored" data-anchor-id="value-at-risk-var-and-expected-shortfall-es-calculations">4. <span style="color:#0077b6;">Value at Risk (VaR) and Expected Shortfall (ES) Calculations</span></h3>
+<section id="a.-historical-simulation" class="level4">
+<h4 class="anchored" data-anchor-id="a.-historical-simulation">a. <span style="color:#0077b6;">Historical Simulation</span></h4>
+<div id="ccec1f84" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>confidence_level <span class="op">=</span> <span class="fl">0.95</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>var_hist <span class="op">=</span> np.percentile(portfolio_returns, (<span class="dv">1</span> <span class="op">-</span> confidence_level) <span class="op">*</span> <span class="dv">100</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>es_hist <span class="op">=</span> portfolio_returns[portfolio_returns <span class="op">&lt;</span> var_hist].mean()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Historical VaR (95%):"</span>, <span class="bu">round</span>(var_hist, <span class="dv">4</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Historical ES (95%):"</span>, <span class="bu">round</span>(es_hist, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Historical VaR (95%): -0.0276
+Historical ES (95%): -0.0407</code></pre>
+</div>
+</div>
+</section>
+<section id="b.-parametric-method-variance-covariance" class="level4">
+<h4 class="anchored" data-anchor-id="b.-parametric-method-variance-covariance">b. <span style="color:#43aa8b;">Parametric Method (Variance-Covariance)</span></h4>
+<div id="43a5c089" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mean_return <span class="op">=</span> portfolio_returns.mean()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>std_return <span class="op">=</span> portfolio_returns.std()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>z_score <span class="op">=</span> norm.ppf(<span class="dv">1</span> <span class="op">-</span> confidence_level)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>var_param <span class="op">=</span> mean_return <span class="op">+</span> z_score <span class="op">*</span> std_return</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>es_param <span class="op">=</span> mean_return <span class="op">-</span> std_return <span class="op">*</span> norm.pdf(z_score) <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> confidence_level)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Parametric VaR (95%): </span><span class="sc">{</span>var_param<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Parametric ES (95%): </span><span class="sc">{</span>es_param<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parametric VaR (95%): -0.0288
+Parametric ES (95%): -0.0364</code></pre>
+</div>
+</div>
+</section>
+<section id="c.-monte-carlo-simulation" class="level4">
+<h4 class="anchored" data-anchor-id="c.-monte-carlo-simulation">c.&nbsp;<span style="color:#720026;">Monte Carlo Simulation</span></h4>
+<div id="e5a3a716" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>simulations <span class="op">=</span> <span class="dv">100000</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>simulated_returns <span class="op">=</span> np.random.normal(mean_return, std_return, simulations)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>var_mc <span class="op">=</span> np.percentile(simulated_returns, (<span class="dv">1</span> <span class="op">-</span> confidence_level) <span class="op">*</span> <span class="dv">100</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>es_mc <span class="op">=</span> simulated_returns[simulated_returns <span class="op">&lt;</span> var_mc].mean()</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Monte Carlo VaR (95%): </span><span class="sc">{</span>var_mc<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Monte Carlo ES (95%): </span><span class="sc">{</span>es_mc<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Monte Carlo VaR (95%): -0.0288
+Monte Carlo ES (95%): -0.0364</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="results-summary-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="results-summary-visualization">5. <span style="color:#0077b6;">Results Summary &amp; Visualization</span></h3>
+<div id="f5f6ddee" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>summary_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Method'</span>: [<span class="st">'Historical'</span>, <span class="st">'Parametric'</span>, <span class="st">'Monte Carlo'</span>],</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'VaR (95%)'</span>: [var_hist, var_param, var_mc],</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ES (95%)'</span>: [es_hist, es_param, es_mc]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>summary_df[<span class="st">'VaR (95%)'</span>] <span class="op">=</span> summary_df[<span class="st">'VaR (95%)'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>summary_df[<span class="st">'ES (95%)'</span>] <span class="op">=</span> summary_df[<span class="st">'ES (95%)'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>display(summary_df.style.set_properties(<span class="op">**</span>{<span class="st">'background-color'</span>: <span class="st">'#f0f8ff'</span>, <span class="st">'color'</span>: <span class="st">'#222'</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_d4e69_row0_col0, #T_d4e69_row0_col1, #T_d4e69_row0_col2, #T_d4e69_row1_col0, #T_d4e69_row1_col1, #T_d4e69_row1_col2, #T_d4e69_row2_col0, #T_d4e69_row2_col1, #T_d4e69_row2_col2 {
+  background-color: #f0f8ff;
+  color: #222;
+}
+</style>
+
+<table id="T_d4e69" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="blank level0" data-quarto-table-cell-role="th">&nbsp;</th>
+<th id="T_d4e69_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Method</th>
+<th id="T_d4e69_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">VaR (95%)</th>
+<th id="T_d4e69_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">ES (95%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_d4e69_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">0</td>
+<td id="T_d4e69_row0_col0" class="data row0 col0">Historical</td>
+<td id="T_d4e69_row0_col1" class="data row0 col1">-0.0276</td>
+<td id="T_d4e69_row0_col2" class="data row0 col2">-0.0407</td>
+</tr>
+<tr class="even">
+<td id="T_d4e69_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">1</td>
+<td id="T_d4e69_row1_col0" class="data row1 col0">Parametric</td>
+<td id="T_d4e69_row1_col1" class="data row1 col1">-0.0288</td>
+<td id="T_d4e69_row1_col2" class="data row1 col2">-0.0364</td>
+</tr>
+<tr class="odd">
+<td id="T_d4e69_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">2</td>
+<td id="T_d4e69_row2_col0" class="data row2 col0">Monte Carlo</td>
+<td id="T_d4e69_row2_col1" class="data row2 col1">-0.0288</td>
+<td id="T_d4e69_row2_col2" class="data row2 col2">-0.0364</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="visualizations" class="level4">
+<h4 class="anchored" data-anchor-id="visualizations"><span style="color:#0077b6;">Visualizations</span></h4>
+<div id="be675116" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Historical Method</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.hist(portfolio_returns, bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#b3cde0'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'Historical Returns'</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.axvline(var_hist, color<span class="op">=</span><span class="st">'#d7263d'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Historical VaR'</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.axvline(es_hist, color<span class="op">=</span><span class="st">'#d7263d'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Historical ES'</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plt.fill_betweenx([<span class="dv">0</span>, plt.gca().get_ylim()[<span class="dv">1</span>]], var_hist, plt.gca().get_xlim()[<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#d7263d'</span>, alpha<span class="op">=</span><span class="fl">0.1</span>, label<span class="op">=</span><span class="st">'Tail Loss Region'</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Portfolio Returns Distribution - Historical Method'</span>, color<span class="op">=</span><span class="st">'#0077b6'</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Returns'</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametric Method</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>plt.hist(portfolio_returns, bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#b3cde0'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'Historical Returns'</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>plt.axvline(var_param, color<span class="op">=</span><span class="st">'#43aa8b'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Parametric VaR'</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>plt.axvline(es_param, color<span class="op">=</span><span class="st">'#43aa8b'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Parametric ES'</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>plt.fill_betweenx([<span class="dv">0</span>, plt.gca().get_ylim()[<span class="dv">1</span>]], var_param, plt.gca().get_xlim()[<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#43aa8b'</span>, alpha<span class="op">=</span><span class="fl">0.1</span>, label<span class="op">=</span><span class="st">'Tail Loss Region'</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Portfolio Returns Distribution - Parametric Method'</span>, color<span class="op">=</span><span class="st">'#43aa8b'</span>)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Returns'</span>)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Monte Carlo Method</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>plt.hist(portfolio_returns, bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#b3cde0'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'Historical Returns'</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>plt.axvline(var_mc, color<span class="op">=</span><span class="st">'#720026'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Monte Carlo VaR'</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>plt.axvline(es_mc, color<span class="op">=</span><span class="st">'#720026'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Monte Carlo ES'</span>)</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>plt.fill_betweenx([<span class="dv">0</span>, plt.gca().get_ylim()[<span class="dv">1</span>]], var_mc, plt.gca().get_xlim()[<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#720026'</span>, alpha<span class="op">=</span><span class="fl">0.1</span>, label<span class="op">=</span><span class="st">'Tail Loss Region'</span>)</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Portfolio Returns Distribution - Monte Carlo Method'</span>, color<span class="op">=</span><span class="st">'#720026'</span>)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Returns'</span>)</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Var_ES_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Var_ES_files/figure-html/cell-9-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Var_ES_files/figure-html/cell-9-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-insights-and-findings" class="level2">
+<h2 class="anchored" data-anchor-id="key-insights-and-findings"><span style="color:#0077b6;">Key Insights and Findings</span></h2>
+<div id="5bae491a" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the results in a Markdown cell</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"""</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ss">## 📊 Interpretation of Results, Key Insights, and Risk Management Implications</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ss">### Interpretation of Results</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="ss">The results below provide insights into the Value at Risk (VaR) and Expected Shortfall (ES) of the portfolio at a 95% confidence level, based on the actual calculations and methods used in this notebook:</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="ss">| Method        | VaR (95%)   | ES (95%)   |</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="ss">|--------------|------------|------------|</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="ss">| Historical   | </span><span class="sc">{</span>var_hist<span class="sc">:.4f}</span><span class="ss"> | </span><span class="sc">{</span>es_hist<span class="sc">:.4f}</span><span class="ss"> |</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="ss">| Parametric   | </span><span class="sc">{</span>var_param<span class="sc">:.4f}</span><span class="ss"> | </span><span class="sc">{</span>es_param<span class="sc">:.4f}</span><span class="ss"> |</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="ss">| Monte Carlo  | </span><span class="sc">{</span>var_mc<span class="sc">:.4f}</span><span class="ss"> | </span><span class="sc">{</span>es_mc<span class="sc">:.4f}</span><span class="ss"> |</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="ss">#### 1. Value at Risk (VaR)</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Definition:** VaR estimates the maximum loss the portfolio is expected to incur over a given time horizon (e.g., 1 day), at a 95% confidence level.</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Results:**</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Historical VaR:** </span><span class="sc">{</span>var_hist<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="ss">    The worst 5% of historical daily returns resulted in losses greater than </span><span class="sc">{</span><span class="bu">abs</span>(var_hist)<span class="sc">:.2%}</span><span class="ss"> of the portfolio value.</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Parametric VaR:** </span><span class="sc">{</span>var_param<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="ss">    Assuming a normal distribution of returns, the maximum loss is approximately </span><span class="sc">{</span><span class="bu">abs</span>(var_param)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Monte Carlo VaR:** </span><span class="sc">{</span>var_mc<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="ss">    Using simulated returns, the portfolio’s maximum expected loss is </span><span class="sc">{</span><span class="bu">abs</span>(var_mc)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Conclusion:** The VaR values are close across all methods, indicating a consistent risk level regardless of the approach. The parametric and Monte Carlo methods both assume normality, while the historical method is based on actual observed returns.</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="ss">#### 2. Expected Shortfall (ES)</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Definition:** ES (or Conditional VaR) measures the average loss beyond the VaR threshold (i.e., in the worst-case scenarios).</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Results:**</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Historical ES:** </span><span class="sc">{</span>es_hist<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="ss">    If losses exceed the VaR level, the average loss in such cases is </span><span class="sc">{</span><span class="bu">abs</span>(es_hist)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Parametric ES:** </span><span class="sc">{</span>es_param<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="ss">    The parametric ES is calculated using the normal distribution assumption and provides an analytical estimate of tail risk.</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Monte Carlo ES:** </span><span class="sc">{</span>es_mc<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="ss">    Based on simulated returns, the average loss in the worst-case scenarios is </span><span class="sc">{</span><span class="bu">abs</span>(es_mc)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Conclusion:** The Expected Shortfall is higher than VaR, as expected. ES provides a more conservative measure of risk by focusing on extreme losses beyond the VaR level. The parametric and Monte Carlo ES values are similar, while the historical ES may be higher if there are more extreme losses in the actual data.</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="ss">### Key Insights</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- VaR across methods consistently estimates losses of approximately </span><span class="sc">{</span><span class="bu">abs</span>(var_param)<span class="sc">:.2%}</span><span class="ss"> to </span><span class="sc">{</span><span class="bu">abs</span>(var_hist)<span class="sc">:.2%}</span><span class="ss"> of the portfolio value at a 95% confidence level.</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- ES highlights that, in the worst-case scenarios, losses could average up to </span><span class="sc">{</span><span class="bu">abs</span>(es_hist)<span class="sc">:.2%}</span><span class="ss"> (Historical), </span><span class="sc">{</span><span class="bu">abs</span>(es_param)<span class="sc">:.2%}</span><span class="ss"> (Parametric), or </span><span class="sc">{</span><span class="bu">abs</span>(es_mc)<span class="sc">:.2%}</span><span class="ss"> (Monte Carlo).</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Comparison:**</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Historical VaR/ES is based on actual observed returns.</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Monte Carlo simulations use the estimated mean and standard deviation to generate a wide range of possible outcomes.</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Parametric methods assume normality, which simplifies computations but may underestimate risk if returns are not normally distributed.</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="ss">### Risk Management Implications</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- **If managing a portfolio worth $1,000,000:**</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **VaR:** The potential loss over 1 day at a 95% confidence level is approximately $</span><span class="sc">{</span><span class="bu">abs</span>(var_param)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> to $</span><span class="sc">{</span><span class="bu">abs</span>(var_hist)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss">.</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **ES:** In extreme conditions, the average loss could be up to $</span><span class="sc">{</span><span class="bu">abs</span>(es_hist)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> (Historical), $</span><span class="sc">{</span><span class="bu">abs</span>(es_param)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> (Parametric), or $</span><span class="sc">{</span><span class="bu">abs</span>(es_mc)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> (Monte Carlo).</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Recommendation:**</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Rely on Expected Shortfall (ES) for better risk management, as it captures extreme risks better than VaR.</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Use Monte Carlo simulations for stress testing under uncertain market conditions.</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Regularly update risk estimates with new data and consider model limitations.</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="ss">---</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="ss">**Summary:**</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="ss">- The close alignment of VaR and ES across methods suggests the portfolio’s risk profile is stable and not overly sensitive to the choice of risk model. However, ES should be preferred for risk management decisions, as it provides a more comprehensive view of potential extreme losses. Regular monitoring and the use of multiple risk estimation techniques are recommended for robust portfolio risk management.</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<section id="interpretation-of-results-key-insights-and-risk-management-implications" class="level2 cell-output cell-output-display cell-output-markdown">
+<h2 class="anchored" data-anchor-id="interpretation-of-results-key-insights-and-risk-management-implications">📊 Interpretation of Results, Key Insights, and Risk Management Implications</h2>
+<section id="interpretation-of-results" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-of-results">Interpretation of Results</h3>
+<p>The results below provide insights into the Value at Risk (VaR) and Expected Shortfall (ES) of the portfolio at a 95% confidence level, based on the actual calculations and methods used in this notebook:</p>
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>VaR (95%)</th>
+<th>ES (95%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Historical</td>
+<td>-0.0276</td>
+<td>-0.0407</td>
+</tr>
+<tr class="even">
+<td>Parametric</td>
+<td>-0.0288</td>
+<td>-0.0364</td>
+</tr>
+<tr class="odd">
+<td>Monte Carlo</td>
+<td>-0.0288</td>
+<td>-0.0364</td>
+</tr>
+</tbody>
+</table>
+<section id="value-at-risk-var" class="level4">
+<h4 class="anchored" data-anchor-id="value-at-risk-var">1. Value at Risk (VaR)</h4>
+<ul>
+<li><strong>Definition:</strong> VaR estimates the maximum loss the portfolio is expected to incur over a given time horizon (e.g., 1 day), at a 95% confidence level.</li>
+<li><strong>Results:</strong>
+<ul>
+<li><strong>Historical VaR:</strong> -2.76%<br>
+The worst 5% of historical daily returns resulted in losses greater than 2.76% of the portfolio value.</li>
+<li><strong>Parametric VaR:</strong> -2.88%<br>
+Assuming a normal distribution of returns, the maximum loss is approximately 2.88%.</li>
+<li><strong>Monte Carlo VaR:</strong> -2.88%<br>
+Using simulated returns, the portfolio’s maximum expected loss is 2.88%.</li>
+</ul></li>
+<li><strong>Conclusion:</strong> The VaR values are close across all methods, indicating a consistent risk level regardless of the approach. The parametric and Monte Carlo methods both assume normality, while the historical method is based on actual observed returns.</li>
+</ul>
+</section>
+<section id="expected-shortfall-es" class="level4">
+<h4 class="anchored" data-anchor-id="expected-shortfall-es">2. Expected Shortfall (ES)</h4>
+<ul>
+<li><strong>Definition:</strong> ES (or Conditional VaR) measures the average loss beyond the VaR threshold (i.e., in the worst-case scenarios).</li>
+<li><strong>Results:</strong>
+<ul>
+<li><strong>Historical ES:</strong> -4.07%<br>
+If losses exceed the VaR level, the average loss in such cases is 4.07%.</li>
+<li><strong>Parametric ES:</strong> -3.64%<br>
+The parametric ES is calculated using the normal distribution assumption and provides an analytical estimate of tail risk.</li>
+<li><strong>Monte Carlo ES:</strong> -3.64%<br>
+Based on simulated returns, the average loss in the worst-case scenarios is 3.64%.</li>
+</ul></li>
+<li><strong>Conclusion:</strong> The Expected Shortfall is higher than VaR, as expected. ES provides a more conservative measure of risk by focusing on extreme losses beyond the VaR level. The parametric and Monte Carlo ES values are similar, while the historical ES may be higher if there are more extreme losses in the actual data.</li>
+</ul>
+</section>
+</section>
+<section id="key-insights" class="level3">
+<h3 class="anchored" data-anchor-id="key-insights">Key Insights</h3>
+<ul>
+<li>VaR across methods consistently estimates losses of approximately 2.88% to 2.76% of the portfolio value at a 95% confidence level.</li>
+<li>ES highlights that, in the worst-case scenarios, losses could average up to 4.07% (Historical), 3.64% (Parametric), or 3.64% (Monte Carlo).</li>
+<li><strong>Comparison:</strong>
+<ul>
+<li>Historical VaR/ES is based on actual observed returns.</li>
+<li>Monte Carlo simulations use the estimated mean and standard deviation to generate a wide range of possible outcomes.</li>
+<li>Parametric methods assume normality, which simplifies computations but may underestimate risk if returns are not normally distributed.</li>
+</ul></li>
+</ul>
+</section>
+<section id="risk-management-implications" class="level3">
+<h3 class="anchored" data-anchor-id="risk-management-implications">Risk Management Implications</h3>
+<ul>
+<li><strong>If managing a portfolio worth $1,000,000:</strong>
+<ul>
+<li><strong>VaR:</strong> The potential loss over 1 day at a 95% confidence level is approximately $28,812 to $27,551.</li>
+<li><strong>ES:</strong> In extreme conditions, the average loss could be up to $40,736 (Historical), $36,375 (Parametric), or $36,413 (Monte Carlo).</li>
+</ul></li>
+<li><strong>Recommendation:</strong>
+<ul>
+<li>Rely on Expected Shortfall (ES) for better risk management, as it captures extreme risks better than VaR.</li>
+<li>Use Monte Carlo simulations for stress testing under uncertain market conditions.</li>
+<li>Regularly update risk estimates with new data and consider model limitations.</li>
+</ul></li>
+</ul>
+<hr>
+<p><strong>Summary:</strong> - The close alignment of VaR and ES across methods suggests the portfolio’s risk profile is stable and not overly sensitive to the choice of risk model. However, ES should be preferred for risk management decisions, as it provides a more comprehensive view of potential extreme losses. Regular monitoring and the use of multiple risk estimation techniques are recommended for robust portfolio risk management.</p>
+</section>
+</section>
+</div>
+<hr>
+</section>
+<section id="final-conclusion-improvements-over-the-r-project" class="level2">
+<h2 class="anchored" data-anchor-id="final-conclusion-improvements-over-the-r-project"><span style="color:#0077b6;">Final Conclusion &amp; Improvements Over the R Project</span></h2>
+<div class="callout-success" data-appearance="simple">
+<p>This Python project not only replicates the core findings of the original R-based VaR and ES analysis (<a href="https://rpubs.com/Jebin1999/1257473">see R project</a>), but also enhances the overall risk assessment process in several key ways:</p>
+<ul>
+<li><strong>Reproducibility &amp; Automation:</strong> Automated data fetching from Yahoo Finance ensures up-to-date analysis, improving on the static data in the R project.</li>
+<li><strong>Expanded Visualization:</strong> More informative, color-coded plots and overlays for direct method comparison.</li>
+<li><strong>Comprehensive Method Comparison:</strong> All three methods are implemented side by side, with unified results and detailed interpretation.</li>
+<li><strong>Parametric (Variance-Covariance) vs.&nbsp;Parametric (Gaussian):</strong> The method here is more robust for real-world, multi-asset portfolios.</li>
+<li><strong>Enhanced Interpretation &amp; Risk Management Insights:</strong> Practical risk management implications and actionable recommendations.</li>
+<li><strong>Modern Python Ecosystem:</strong> Uses widely adopted Python libraries for accessibility and extensibility.</li>
+</ul>
+<p><strong>In summary:</strong> The Python translation not only faithfully reproduces the R project’s results but also elevates the analysis with dynamic data, improved visualizations, a more robust parametric method, and deeper practical insights. This makes the project a robust, user-friendly, and future-proof tool for financial risk assessment using VaR and ES methodologies.</p>
+</div>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Portfolio VaR &amp; ES Analysis: Python vs R Comparison"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">  - Azizbek Ganiev (475150)</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">  - Shokhrukhbek Valijonov (475154)</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">  - Sujith Madesh (474083)</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2025-05-11"</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: "On this page"</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">    mainfont: 'Segoe UI'</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 1.1em</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf:</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">    documentclass: scrartcl</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: "Contents"</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">    colorlinks: true</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">    mainfont: 'Arial'</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 11pt</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">    geometry: margin=1in</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">  python:</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">    python-path: "./venv/Scripts/python.exe"</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="fu"># &lt;span style="color:#0077b6;"&gt;Portfolio VaR &amp; ES Analysis: Project Overview&lt;/span&gt;</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>::: {.callout-note appearance="simple" icon="target"}</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="fu">#### **Objective**</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>Estimate and compare the Value at Risk (VaR) and Expected Shortfall (ES) of a diversified portfolio using:</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#0077b6;"</span><span class="dt">&gt;</span>Historical Simulation<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#43aa8b;"</span><span class="dt">&gt;</span>Parametric (Variance-Covariance)<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#720026;"</span><span class="dt">&gt;</span>Monte Carlo Simulation<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>**Data Source:** Yahoo Finance (AAPL, MSFT, GOOG)</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>::: {.panel-tabset}</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Methods Overview</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip appearance="simple"}</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#0077b6;"</span><span class="dt">&gt;</span>Historical Simulation:<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span> Non-parametric, uses actual returns.</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#43aa8b;"</span><span class="dt">&gt;</span>Parametric (Variance-Covariance):<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span> Assumes normality, uses mean &amp; std deviation.</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#720026;"</span><span class="dt">&gt;</span>Monte Carlo:<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span> Simulates returns using estimated parameters.</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## &lt;span style="color:#0077b6;"&gt;Python Implementation&lt;/span&gt;</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1. &lt;span style="color:#0077b6;"&gt;Import Necessary Libraries&lt;/span&gt;</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2. &lt;span style="color:#0077b6;"&gt;Data Acquisition and Preparation&lt;/span&gt;</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a>tickers <span class="op">=</span> [<span class="st">'AAPL'</span>, <span class="st">'GOOG'</span>, <span class="st">'MSFT'</span>]</span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> <span class="st">'2020-01-01'</span></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data (MultiIndex by default)</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> yf.download(tickers, start<span class="op">=</span>start_date)</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>close_prices <span class="op">=</span> data[<span class="st">'Close'</span>]</span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Set end_date to the latest available date in the data</span></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>data_dates <span class="op">=</span> close_prices.index</span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> <span class="bu">str</span>(data_dates[<span class="op">-</span><span class="dv">1</span>].date())</span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>close_prices.dropna(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>returns <span class="op">=</span> close_prices.pct_change().fillna(<span class="dv">0</span>)</span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>returns.tail()</span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a><span class="fu">### 3. &lt;span style="color:#0077b6;"&gt;Portfolio Construction&lt;/span&gt;</span></span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> np.array([<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>])</span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>portfolio_returns <span class="op">=</span> returns.dot(weights)</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>cumulative_returns <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> portfolio_returns).cumprod() <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>plt.plot(cumulative_returns, label<span class="op">=</span><span class="st">'Cumulative Portfolio Returns'</span>, color<span class="op">=</span><span class="st">'#0077b6'</span>)</span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Cumulative Portfolio Returns Over Time'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, color<span class="op">=</span><span class="st">'#0077b6'</span>)</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Date'</span>)</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Cumulative Returns'</span>)</span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a><span class="fu">### 4. &lt;span style="color:#0077b6;"&gt;Value at Risk (VaR) and Expected Shortfall (ES) Calculations&lt;/span&gt;</span></span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a><span class="fu">#### a. &lt;span style="color:#0077b6;"&gt;Historical Simulation&lt;/span&gt;</span></span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a>confidence_level <span class="op">=</span> <span class="fl">0.95</span></span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>var_hist <span class="op">=</span> np.percentile(portfolio_returns, (<span class="dv">1</span> <span class="op">-</span> confidence_level) <span class="op">*</span> <span class="dv">100</span>)</span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>es_hist <span class="op">=</span> portfolio_returns[portfolio_returns <span class="op">&lt;</span> var_hist].mean()</span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Historical VaR (95%):"</span>, <span class="bu">round</span>(var_hist, <span class="dv">4</span>))</span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Historical ES (95%):"</span>, <span class="bu">round</span>(es_hist, <span class="dv">4</span>))</span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a><span class="fu">#### b. &lt;span style="color:#43aa8b;"&gt;Parametric Method (Variance-Covariance)&lt;/span&gt;</span></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>mean_return <span class="op">=</span> portfolio_returns.mean()</span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>std_return <span class="op">=</span> portfolio_returns.std()</span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>z_score <span class="op">=</span> norm.ppf(<span class="dv">1</span> <span class="op">-</span> confidence_level)</span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>var_param <span class="op">=</span> mean_return <span class="op">+</span> z_score <span class="op">*</span> std_return</span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>es_param <span class="op">=</span> mean_return <span class="op">-</span> std_return <span class="op">*</span> norm.pdf(z_score) <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> confidence_level)</span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Parametric VaR (95%): </span><span class="sc">{</span>var_param<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Parametric ES (95%): </span><span class="sc">{</span>es_param<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a><span class="fu">#### c. &lt;span style="color:#720026;"&gt;Monte Carlo Simulation&lt;/span&gt;</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>simulations <span class="op">=</span> <span class="dv">100000</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>simulated_returns <span class="op">=</span> np.random.normal(mean_return, std_return, simulations)</span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>var_mc <span class="op">=</span> np.percentile(simulated_returns, (<span class="dv">1</span> <span class="op">-</span> confidence_level) <span class="op">*</span> <span class="dv">100</span>)</span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>es_mc <span class="op">=</span> simulated_returns[simulated_returns <span class="op">&lt;</span> var_mc].mean()</span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Monte Carlo VaR (95%): </span><span class="sc">{</span>var_mc<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Monte Carlo ES (95%): </span><span class="sc">{</span>es_mc<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5. &lt;span style="color:#0077b6;"&gt;Results Summary &amp; Visualization&lt;/span&gt;</span></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>summary_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Method'</span>: [<span class="st">'Historical'</span>, <span class="st">'Parametric'</span>, <span class="st">'Monte Carlo'</span>],</span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>    <span class="st">'VaR (95%)'</span>: [var_hist, var_param, var_mc],</span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ES (95%)'</span>: [es_hist, es_param, es_mc]</span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a>summary_df[<span class="st">'VaR (95%)'</span>] <span class="op">=</span> summary_df[<span class="st">'VaR (95%)'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a>summary_df[<span class="st">'ES (95%)'</span>] <span class="op">=</span> summary_df[<span class="st">'ES (95%)'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a>display(summary_df.style.set_properties(<span class="op">**</span>{<span class="st">'background-color'</span>: <span class="st">'#f0f8ff'</span>, <span class="st">'color'</span>: <span class="st">'#222'</span>}))</span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a><span class="fu">#### &lt;span style="color:#0077b6;"&gt;Visualizations&lt;/span&gt;</span></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Historical Method</span></span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a>plt.hist(portfolio_returns, bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#b3cde0'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'Historical Returns'</span>)</span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a>plt.axvline(var_hist, color<span class="op">=</span><span class="st">'#d7263d'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Historical VaR'</span>)</span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a>plt.axvline(es_hist, color<span class="op">=</span><span class="st">'#d7263d'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Historical ES'</span>)</span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a>plt.fill_betweenx([<span class="dv">0</span>, plt.gca().get_ylim()[<span class="dv">1</span>]], var_hist, plt.gca().get_xlim()[<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#d7263d'</span>, alpha<span class="op">=</span><span class="fl">0.1</span>, label<span class="op">=</span><span class="st">'Tail Loss Region'</span>)</span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Portfolio Returns Distribution - Historical Method'</span>, color<span class="op">=</span><span class="st">'#0077b6'</span>)</span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Returns'</span>)</span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametric Method</span></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a>plt.hist(portfolio_returns, bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#b3cde0'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'Historical Returns'</span>)</span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a>plt.axvline(var_param, color<span class="op">=</span><span class="st">'#43aa8b'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Parametric VaR'</span>)</span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a>plt.axvline(es_param, color<span class="op">=</span><span class="st">'#43aa8b'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Parametric ES'</span>)</span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a>plt.fill_betweenx([<span class="dv">0</span>, plt.gca().get_ylim()[<span class="dv">1</span>]], var_param, plt.gca().get_xlim()[<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#43aa8b'</span>, alpha<span class="op">=</span><span class="fl">0.1</span>, label<span class="op">=</span><span class="st">'Tail Loss Region'</span>)</span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Portfolio Returns Distribution - Parametric Method'</span>, color<span class="op">=</span><span class="st">'#43aa8b'</span>)</span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Returns'</span>)</span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="co"># Monte Carlo Method</span></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>plt.hist(portfolio_returns, bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#b3cde0'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'Historical Returns'</span>)</span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a>plt.axvline(var_mc, color<span class="op">=</span><span class="st">'#720026'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Monte Carlo VaR'</span>)</span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>plt.axvline(es_mc, color<span class="op">=</span><span class="st">'#720026'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Monte Carlo ES'</span>)</span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>plt.fill_betweenx([<span class="dv">0</span>, plt.gca().get_ylim()[<span class="dv">1</span>]], var_mc, plt.gca().get_xlim()[<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#720026'</span>, alpha<span class="op">=</span><span class="fl">0.1</span>, label<span class="op">=</span><span class="st">'Tail Loss Region'</span>)</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Portfolio Returns Distribution - Monte Carlo Method'</span>, color<span class="op">=</span><span class="st">'#720026'</span>)</span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Returns'</span>)</span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a><span class="fu">## &lt;span style="color:#0077b6;"&gt;Key Insights and Findings&lt;/span&gt;</span></span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the results in a Markdown cell</span></span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"""</span></span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a><span class="ss">## 📊 Interpretation of Results, Key Insights, and Risk Management Implications</span></span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="ss">### Interpretation of Results</span></span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="ss">The results below provide insights into the Value at Risk (VaR) and Expected Shortfall (ES) of the portfolio at a 95% confidence level, based on the actual calculations and methods used in this notebook:</span></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="ss">| Method        | VaR (95%)   | ES (95%)   |</span></span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a><span class="ss">|--------------|------------|------------|</span></span>
+<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a><span class="ss">| Historical   | </span><span class="sc">{</span>var_hist<span class="sc">:.4f}</span><span class="ss"> | </span><span class="sc">{</span>es_hist<span class="sc">:.4f}</span><span class="ss"> |</span></span>
+<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a><span class="ss">| Parametric   | </span><span class="sc">{</span>var_param<span class="sc">:.4f}</span><span class="ss"> | </span><span class="sc">{</span>es_param<span class="sc">:.4f}</span><span class="ss"> |</span></span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a><span class="ss">| Monte Carlo  | </span><span class="sc">{</span>var_mc<span class="sc">:.4f}</span><span class="ss"> | </span><span class="sc">{</span>es_mc<span class="sc">:.4f}</span><span class="ss"> |</span></span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a><span class="ss">#### 1. Value at Risk (VaR)</span></span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Definition:** VaR estimates the maximum loss the portfolio is expected to incur over a given time horizon (e.g., 1 day), at a 95% confidence level.</span></span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Results:**</span></span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Historical VaR:** </span><span class="sc">{</span>var_hist<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a><span class="ss">    The worst 5% of historical daily returns resulted in losses greater than </span><span class="sc">{</span><span class="bu">abs</span>(var_hist)<span class="sc">:.2%}</span><span class="ss"> of the portfolio value.</span></span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Parametric VaR:** </span><span class="sc">{</span>var_param<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a><span class="ss">    Assuming a normal distribution of returns, the maximum loss is approximately </span><span class="sc">{</span><span class="bu">abs</span>(var_param)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Monte Carlo VaR:** </span><span class="sc">{</span>var_mc<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a><span class="ss">    Using simulated returns, the portfolio’s maximum expected loss is </span><span class="sc">{</span><span class="bu">abs</span>(var_mc)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Conclusion:** The VaR values are close across all methods, indicating a consistent risk level regardless of the approach. The parametric and Monte Carlo methods both assume normality, while the historical method is based on actual observed returns.</span></span>
+<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a><span class="ss">#### 2. Expected Shortfall (ES)</span></span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Definition:** ES (or Conditional VaR) measures the average loss beyond the VaR threshold (i.e., in the worst-case scenarios).</span></span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Results:**</span></span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Historical ES:** </span><span class="sc">{</span>es_hist<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a><span class="ss">    If losses exceed the VaR level, the average loss in such cases is </span><span class="sc">{</span><span class="bu">abs</span>(es_hist)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Parametric ES:** </span><span class="sc">{</span>es_param<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a><span class="ss">    The parametric ES is calculated using the normal distribution assumption and provides an analytical estimate of tail risk.</span></span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **Monte Carlo ES:** </span><span class="sc">{</span>es_mc<span class="sc">:.2%}</span><span class="ss">  </span></span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a><span class="ss">    Based on simulated returns, the average loss in the worst-case scenarios is </span><span class="sc">{</span><span class="bu">abs</span>(es_mc)<span class="sc">:.2%}</span><span class="ss">.</span></span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Conclusion:** The Expected Shortfall is higher than VaR, as expected. ES provides a more conservative measure of risk by focusing on extreme losses beyond the VaR level. The parametric and Monte Carlo ES values are similar, while the historical ES may be higher if there are more extreme losses in the actual data.</span></span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="ss">### Key Insights</span></span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a><span class="ss">- VaR across methods consistently estimates losses of approximately </span><span class="sc">{</span><span class="bu">abs</span>(var_param)<span class="sc">:.2%}</span><span class="ss"> to </span><span class="sc">{</span><span class="bu">abs</span>(var_hist)<span class="sc">:.2%}</span><span class="ss"> of the portfolio value at a 95% confidence level.</span></span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a><span class="ss">- ES highlights that, in the worst-case scenarios, losses could average up to </span><span class="sc">{</span><span class="bu">abs</span>(es_hist)<span class="sc">:.2%}</span><span class="ss"> (Historical), </span><span class="sc">{</span><span class="bu">abs</span>(es_param)<span class="sc">:.2%}</span><span class="ss"> (Parametric), or </span><span class="sc">{</span><span class="bu">abs</span>(es_mc)<span class="sc">:.2%}</span><span class="ss"> (Monte Carlo).</span></span>
+<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Comparison:**</span></span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Historical VaR/ES is based on actual observed returns.</span></span>
+<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Monte Carlo simulations use the estimated mean and standard deviation to generate a wide range of possible outcomes.</span></span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Parametric methods assume normality, which simplifies computations but may underestimate risk if returns are not normally distributed.</span></span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a><span class="ss">### Risk Management Implications</span></span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a><span class="ss">- **If managing a portfolio worth $1,000,000:**</span></span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **VaR:** The potential loss over 1 day at a 95% confidence level is approximately $</span><span class="sc">{</span><span class="bu">abs</span>(var_param)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> to $</span><span class="sc">{</span><span class="bu">abs</span>(var_hist)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss">.</span></span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a><span class="ss">  - **ES:** In extreme conditions, the average loss could be up to $</span><span class="sc">{</span><span class="bu">abs</span>(es_hist)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> (Historical), $</span><span class="sc">{</span><span class="bu">abs</span>(es_param)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> (Parametric), or $</span><span class="sc">{</span><span class="bu">abs</span>(es_mc)<span class="op">*</span><span class="dv">1_000_000</span><span class="sc">:,.0f}</span><span class="ss"> (Monte Carlo).</span></span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="ss">- **Recommendation:**</span></span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Rely on Expected Shortfall (ES) for better risk management, as it captures extreme risks better than VaR.</span></span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Use Monte Carlo simulations for stress testing under uncertain market conditions.</span></span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a><span class="ss">  - Regularly update risk estimates with new data and consider model limitations.</span></span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a><span class="ss">---</span></span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a><span class="ss">**Summary:**</span></span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a><span class="ss">- The close alignment of VaR and ES across methods suggests the portfolio’s risk profile is stable and not overly sensitive to the choice of risk model. However, ES should be preferred for risk management decisions, as it provides a more comprehensive view of potential extreme losses. Regular monitoring and the use of multiple risk estimation techniques are recommended for robust portfolio risk management.</span></span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>))</span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a><span class="fu">## &lt;span style="color:#0077b6;"&gt;Final Conclusion &amp; Improvements Over the R Project&lt;/span&gt;</span></span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a>::: {.callout-success appearance="simple"}</span>
+<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a>This Python project not only replicates the core findings of the original R-based VaR and ES analysis (<span class="co">[</span><span class="ot">see R project</span><span class="co">](https://rpubs.com/Jebin1999/1257473)</span>), but also enhances the overall risk assessment process in several key ways:</span>
+<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reproducibility &amp; Automation:** Automated data fetching from Yahoo Finance ensures up-to-date analysis, improving on the static data in the R project.</span>
+<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Expanded Visualization:** More informative, color-coded plots and overlays for direct method comparison.</span>
+<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Comprehensive Method Comparison:** All three methods are implemented side by side, with unified results and detailed interpretation.</span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Parametric (Variance-Covariance) vs. Parametric (Gaussian):** The method here is more robust for real-world, multi-asset portfolios.</span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Enhanced Interpretation &amp; Risk Management Insights:** Practical risk management implications and actionable recommendations.</span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modern Python Ecosystem:** Uses widely adopted Python libraries for accessibility and extensibility.</span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a>**In summary:**</span>
+<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a>The Python translation not only faithfully reproduces the R project's results but also elevates the analysis with dynamic data, improved visualizations, a more robust parametric method, and deeper practical insights. This makes the project a robust, user-friendly, and future-proof tool for financial risk assessment using VaR and ES methodologies.</span>
+<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a>:::</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
